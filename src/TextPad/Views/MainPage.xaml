@@ -1,0 +1,68 @@
+﻿<Page
+    x:Class="TextPad.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TextPad.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.TopAppBar>
+        <CommandBar x:Name="Menu">
+            <AppBarButton
+                x:Name="NewCommand"
+                x:Uid="/Resources/AppBar_NewCommand"
+                          
+                Icon="NewFolder"
+                IsEnabled="True"
+                Label="New"
+                
+                ToolTipService.ToolTip="Create a new document"
+                ToolTipService.Placement="Mouse"
+                
+                Click="NewCommand_Click"
+                
+                />
+            <AppBarButton
+                x:Name="OpenCommand"
+                x:Uid="/Resources/AppBar_OpenCommand"
+                          
+                Icon="OpenFile"
+                IsEnabled="True"
+                Label="Open"
+                
+                ToolTipService.ToolTip="Open existing document"
+                ToolTipService.Placement="Mouse"
+                
+                Click="OpenCommand_Click"
+                
+                />
+            <AppBarButton
+                x:Name="SaveCommand"
+                x:Uid="/Resources/AppBar_SaveCommand"
+                          
+                Icon="Save"
+                IsEnabled="{Binding Path=SaveCommandEnabled, Mode=TwoWay}"
+                Label="Save"
+                
+                ToolTipService.ToolTip="Save text document"
+                ToolTipService.Placement="Mouse"
+                
+                Click="SaveCommand_Click"
+                
+                />
+        </CommandBar>
+    </Page.TopAppBar>
+    
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBox x:Name="ViewPort"                 
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 Padding="0, 0, 10, 0"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 KeyDown="ViewPort_KeyDown"
+                 TextChanged="ViewPort_TextChanged"
+                 />
+    </Grid>
+</Page>

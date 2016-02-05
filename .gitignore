@@ -1,0 +1,19 @@
+bin/
+obj/
+packages/
+
+# Ignore files that contain confidential informations
+
+build/Package.xml
+
+Package.appxmanifest
+Package.StoreAssociation.xml
+
+*_StoreKey.pfx
+
+# Ignore files built by Visual Studio
+
+project.lock.json
+
+*.suo
+*.user

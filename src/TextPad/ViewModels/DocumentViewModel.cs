@@ -153,7 +153,7 @@ namespace TextPad.ViewModels
             if (IsModified)
             {
                 if (await DialogBox.ConfirmSaveChangesDialogAsync() == MessageBox.Result.No)
-                    return false;
+                    return true;
 
                 var path = await SaveAsync();
                 if (path == null)
@@ -248,8 +248,10 @@ namespace TextPad.ViewModels
                 var bytes = new Byte[buffer.Length];
                 reader.ReadBytes(bytes);
 
-                encoding = encoding ?? DetectEncoding(bytes);
-                return encoding.GetString(bytes, 0, bytes.Length);
+                // use the specified encoding for subsequent operations
+
+                Encoding = encoding ?? DetectEncoding(bytes);
+                return Encoding.GetString(bytes, 0, bytes.Length);
             }
         }
 

@@ -182,4 +182,7 @@ Voulez-vous sauvegarder les changements ?</value>
   <data name="About_Review_PleaseReviewApp.Text" xml:space="preserve">
     <value>N'hésitez pas à donner votre avis sur cette application</value>
   </data>
+  <data name="MessageDialog_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
 </root>

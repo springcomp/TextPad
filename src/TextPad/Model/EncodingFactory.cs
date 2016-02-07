@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TextPad.Encodings;
 
 namespace TextPad.Model
 {
@@ -20,6 +21,9 @@ namespace TextPad.Model
 
                 case Charset.UnicodeBe:
                     return Encoding.BigEndianUnicode;
+
+                case Charset.Western1252:
+                    return Windows1252Encoding.Create();
 
                 default:
                     return Encoding.UTF8;

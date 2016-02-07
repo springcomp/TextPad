@@ -69,22 +69,10 @@ namespace TextPad.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void ViewPort_KeyDown(object sender, KeyRoutedEventArgs e)
+        private void ViewPort_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
-            var ctrl = (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
-
             if (e.Key == VirtualKey.Tab)
                 HandleTabKey(e);
-
-            if (e.Key == VirtualKey.N && ctrl)
-                await Document.CreateAsync();
-
-            if (e.Key == VirtualKey.O && ctrl)
-                await Document.OpenAsync();
-
-            if (e.Key == VirtualKey.S && ctrl)
-                await Document.SaveAsync();
         }
 
         private void HandleTabKey(KeyRoutedEventArgs e)
@@ -110,11 +98,20 @@ namespace TextPad.Views
             ViewPort.SelectionStart = position + 1;
         }
 
+        #endregion
+
         private void ViewPort_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Document.Text = ViewPort.Text;
-        }
+            if (Document.IsMakingTechnicalChanges)
+            {
+                Document.StopMakingTechnicalChanges();
+                return;
+            }
 
-        #endregion
+            // only use this event to refresh the state of command bar buttons
+
+            Document.IsModified = true;
+            Document.SaveCommandEnabled = true;
+        }
     }
 }

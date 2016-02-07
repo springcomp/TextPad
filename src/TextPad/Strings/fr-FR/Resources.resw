@@ -135,6 +135,18 @@
   <data name="AppBar_SaveCommand.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Enregistrer le document</value>
   </data>
+  <data name="Encoding_UnicodeBe" xml:space="preserve">
+    <value>Unicode (UTF-16) Big Endian</value>
+  </data>
+  <data name="Encoding_UnicodeLe" xml:space="preserve">
+    <value>Unicode (UTF-16)</value>
+  </data>
+  <data name="Encoding_UTF8" xml:space="preserve">
+    <value>Unicode (UTF-8)</value>
+  </data>
+  <data name="Encoding_Western1252" xml:space="preserve">
+    <value>Europe occidentale (Windows 1252)</value>
+  </data>
   <data name="FileSavePicker_FileTypeChoice_TextDocument" xml:space="preserve">
     <value>Fichier texte</value>
     <comment>Name of files with the .txt extension.</comment>
@@ -157,5 +169,17 @@ Voulez-vous sauvegarder les changements ?</value>
   </data>
   <data name="MessageDialog_Yes" xml:space="preserve">
     <value>Oui</value>
+  </data>
+  <data name="SplitViewPane_DefaultEncoding.Text" xml:space="preserve">
+    <value>Jeu de caractères par défaut :</value>
+  </data>
+  <data name="SplitViewPane_DefaultCharset.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Choisir un jeu de caractères pour décoder les fichiers textes</value>
+  </data>
+  <data name="About_Review_InWindowsStore.Text" xml:space="preserve">
+    <value>dans le Windows® Store</value>
+  </data>
+  <data name="About_Review_PleaseReviewApp.Text" xml:space="preserve">
+    <value>N'hésitez pas à donner votre avis sur cette application</value>
   </data>
 </root>

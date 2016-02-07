@@ -100,10 +100,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\State.cs" />
+    <Compile Include="Model\Charset.cs" />
+    <Compile Include="Model\DisplayedItem.cs" />
+    <Compile Include="Model\EncodingFactory.cs" />
+    <Compile Include="Model\Settings.cs" />
     <Compile Include="Utils\DialogBox.cs" />
     <Compile Include="Utils\MessageBox.cs" />
-    <Compile Include="ViewModels\Context.cs" />
+    <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\DocumentViewModel.cs" />
     <Compile Include="Views\DocumentView.xaml.cs">
       <DependentUpon>DocumentView.xaml</DependentUpon>
@@ -138,6 +141,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="Themes\Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
     <Page Include="Views\DocumentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

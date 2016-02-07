@@ -135,6 +135,18 @@
   <data name="AppBar_SaveCommand.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Save document</value>
   </data>
+  <data name="Encoding_UnicodeBe" xml:space="preserve">
+    <value>Unicode (UTF-16) Big Endian</value>
+  </data>
+  <data name="Encoding_UnicodeLe" xml:space="preserve">
+    <value>Unicode (UTF-16)</value>
+  </data>
+  <data name="Encoding_UTF8" xml:space="preserve">
+    <value>Unicode (UTF-8)</value>
+  </data>
+  <data name="Encoding_Western1252" xml:space="preserve">
+    <value>Western Europe (Windows 1252)</value>
+  </data>
   <data name="FileSavePicker_FileTypeChoice_TextDocument" xml:space="preserve">
     <value>Text file</value>
     <comment>Name of files with the .txt extension.</comment>
@@ -160,5 +172,17 @@ Do you want to save the current changes?</value>
   </data>
   <data name="MessageDialog_Yes" xml:space="preserve">
     <value>Yes</value>
+  </data>
+  <data name="SplitViewPane_DefaultEncoding.Text" xml:space="preserve">
+    <value>Default encoding:</value>
+  </data>
+  <data name="SplitViewPane_DefaultCharset.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Select a default encoding to read and write text files</value>
+  </data>
+  <data name="About_Review_InWindowsStore.Text" xml:space="preserve">
+    <value>in the Windows® Store</value>
+  </data>
+  <data name="About_Review_PleaseReviewApp.Text" xml:space="preserve">
+    <value>Please, review this app</value>
   </data>
 </root>

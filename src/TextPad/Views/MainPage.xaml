@@ -5,10 +5,20 @@
     xmlns:local="using:TextPad.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    KeyDown="Page_KeyDown"
+    >
 
     <Page.TopAppBar>
-        <CommandBar x:Name="Menu">
+        <CommandBar>
+            <CommandBar.Content>
+                <AppBarButton
+                x:Name="HamburgerButton"
+                Tag="&#xE700;"
+                Style="{StaticResource HamburgerAppButtonStyle}"
+                Click="HamburgerButton_Click"
+                />
+            </CommandBar.Content>
             <AppBarButton
                 x:Name="NewCommand"
                 x:Uid="/Resources/AppBar_NewCommand"
@@ -54,17 +64,72 @@
         </CommandBar>
     </Page.TopAppBar>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Frame x:Name="CurrentFrame">
-            <Frame.ContentTransitions>
-                <TransitionCollection>
-                    <NavigationThemeTransition>
-                        <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                            <EntranceNavigationTransitionInfo/>
-                        </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                    </NavigationThemeTransition>
-                </TransitionCollection>
-            </Frame.ContentTransitions>
-        </Frame>
-    </Grid>
+    <SplitView x:Name="SplitView"
+               DisplayMode="Overlay"
+               IsPaneOpen="False"
+               IsTabStop="False"
+               PaneBackground="{ThemeResource SplitViewPaneBackgroundBrush}"
+               >
+        <SplitView.Pane>
+            <RelativePanel
+                MinHeight="80" Margin="12, 12, 12, 12"
+                >
+                <!-- Choose an encoding DropDown box -->
+                <StackPanel Orientation="Vertical" RelativePanel.AlignTopWithPanel="True">
+                    <TextBlock
+                        x:Uid="/Resources/SplitViewPane_DefaultEncoding"
+                        HorizontalAlignment="Left"
+                        Padding="0, 0, 0, 4"
+                        Style="{ThemeResource BodyTextBlockStyle}"
+                        Text="Encoding:"
+                        />
+                    <ComboBox
+                        x:Name="DefaultCharset"
+                        x:Uid="/Resources/SplitViewPane_DefaultCharset"
+                        HorizontalAlignment="Left"
+                        DisplayMemberPath="Label"
+                        ItemsSource="{Binding Path=AvailableCharsets, Mode=OneTime}"
+                        SelectedItem="{Binding Path=CurrentCharset, Mode=TwoWay}"
+                        ToolTipService.Placement="Mouse"
+                        />
+                </StackPanel>
+                <!-- About information -->
+                <StackPanel Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True">
+                    <Line  HorizontalAlignment="Stretch" Stroke="{ThemeResource SystemControlBackgroundBaseLowBrush}" StrokeThickness="2"
+                           X2="{Binding Path=OpenPaneLength, ElementName=SplitView}"
+                           Margin="0, 0, 0, 8"
+                           />
+
+                    <TextBlock
+                        Style="{StaticResource FootprintTextBlockStyle}">
+                        <Run Text="Basic Text Editor - Version " />
+                        <Run Text="{Binding Path=CurrentVersion, Mode=OneTime}" />
+                    </TextBlock>
+                    <TextBlock
+                        Style="{StaticResource FootprintTextBlockStyle}"
+                        TextWrapping="WrapWholeWords">
+                        <Run x:Uid="/Resources/About_Review_PleaseReviewApp" Text="Please, review this App" />
+                        <Hyperlink
+                            NavigateUri="https://www.microsoft.com/store/apps/9nblggh5qbpj">
+                            <Run x:Uid="/Resources/About_Review_InWindowsStore" Text="in the Windows® Store" />
+                        </Hyperlink>
+                        <Run Text="." />
+                    </TextBlock>
+                </StackPanel>
+            </RelativePanel>
+        </SplitView.Pane>
+        <SplitView.Content>
+            <Frame x:Name="CurrentFrame">
+                <Frame.ContentTransitions>
+                    <TransitionCollection>
+                        <NavigationThemeTransition>
+                            <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                <EntranceNavigationTransitionInfo/>
+                            </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                        </NavigationThemeTransition>
+                    </TransitionCollection>
+                </Frame.ContentTransitions>
+            </Frame>
+        </SplitView.Content>
+    </SplitView>
 </Page>

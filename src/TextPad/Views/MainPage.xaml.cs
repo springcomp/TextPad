@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using TextPad.Model;
 using TextPad.Utils;
 using TextPad.ViewModels;
 using Windows.ApplicationModel.Activation;
@@ -34,14 +35,19 @@ namespace TextPad.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private ApplicationViewModel viewModel_ = new ApplicationViewModel();
         private DocumentViewModel document_;
+
+        private Settings settingsXXX_ = Settings.Load();
 
         public MainPage()
         {
             this.InitializeComponent();
-            this.DataContext = this;
+            this.DataContext = viewModel_;
 
             SetDocument();
+
+            viewModel_.DefaultCharsetChanged += ViewModel__DefaultCharsetChanged;
         }
 
         public Frame View { get { return CurrentFrame; } }
@@ -55,86 +61,137 @@ namespace TextPad.Views
             document_.SaveCommandEnabledChanged += Document_SaveCommandEnabledChanged;
         }
 
-        private async Task<bool> ConfirmSavePendingChangesAsync()
+        private async Task SetDefaultCharsetAsync()
         {
-            if (document_.IsModified)
+            var settings = Settings.Load();
+
+            var newCharset = viewModel_.CurrentCharset.Key;
+            var currentCharset = settings.DefaultCharset;
+
+            // save new default charset
+
+            if (currentCharset != newCharset)
             {
-                if (await DialogBox.ConfirmSaveChangesDialogAsync() == MessageBox.Result.No)
-                    return false;
+                // re-interpret the current document with the new charset
 
-                var path = await document_.SaveAsync();
-                if (path == null)
-                    return false;
-            }
+                if (!await SetDefaultCharsetAsync(newCharset))
+                {
+                    // if the document had pending changes and the user
+                    // canceled the save operation, we restore the
+                    // original charset setting.
 
-            return true;
-        }
+                    // make sure to raise a PropertyChanged event
+                    // to restore the combo box selection
 
-        #region Overrides
+                    viewModel_.SetCurrentCharset(currentCharset, true);
+                    return;
+                }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            var path = e.Parameter as StorageFile;
-            if (path == null)
-                NewCommand_Click(this, null);
+                // otherwise, we save the new default charset setting
 
-            else
-            {
-                await document_.OpenAsync(path);
-                View.Navigate(typeof(DocumentView), document_);
+                settings.DefaultCharset = viewModel_.CurrentCharset.Key;
+                settings.Save();
             }
         }
 
-        #endregion
-
-        #region Event Handlers
-
-        private void Document_SaveCommandEnabledChanged(object sender, EventArgs e)
+        private async Task<bool> SetDefaultCharsetAsync(Charset charset)
         {
-            SaveCommandEnabled = document_.SaveCommandEnabled;
+            var encoding = EncodingFactory.GetEncoding(charset);
+            return await document_.SetEncodingAsync(encoding);
         }
 
-        private async void NewCommand_Click(object sender, RoutedEventArgs e)
+        private async Task OnOpenCommandAsync()
         {
             // save modified document first
 
-            if (!await ConfirmSavePendingChangesAsync())
+            if (!await document_.SavePendingChangesAsync())
+                return;
+
+            if (await document_.OpenAsync() != null)
+                View.Navigate(typeof(DocumentView), document_);
+        }
+
+        private async Task OnSaveCommandAsync()
+        {
+            await document_.SaveAsync();
+        }
+
+        private async Task OnNewCommandAsync()
+        {
+            // save modified document first
+
+            if (!await document_.SavePendingChangesAsync())
                 return;
 
             SetDocument();
             View.Navigate(typeof(DocumentView), document_);
         }
 
-        private async void OpenCommand_Click(object sender, RoutedEventArgs e)
+        #region Overrides
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            // save modified document first
+            await SetDefaultCharsetAsync();
 
-            if (!await ConfirmSavePendingChangesAsync())
-                return;
+            var path = e.Parameter as StorageFile;
+            if (path == null)
+                await document_.CreateAsync();
 
-            if (await document_.OpenAsync() != null)            
-                View.Navigate(typeof(DocumentView), document_);
-        }
+            else
+                await document_.OpenAsync(path);
 
-        private async void SaveCommand_Click(object sender, RoutedEventArgs e)
-        {
-            await document_.SaveAsync();
+            View.Navigate(typeof(DocumentView), document_);
         }
 
         #endregion
 
-        public static readonly DependencyProperty SaveCommandEnabledProperty =
-            DependencyProperty.RegisterAttached(
-                  "SaveCommandEnabled"
-                , typeof(Boolean)
-                , typeof(MainPage)
-                , new PropertyMetadata(false, null))
-                ;
+        #region Event Handlers
 
-        public bool SaveCommandEnabled
+        private async void Page_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            get { return (bool) GetValue(SaveCommandEnabledProperty); }
-            set { this.SetValue(SaveCommandEnabledProperty, value); }
+            var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
+            var ctrl = (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+
+            if (e.Key == VirtualKey.N && ctrl)
+                await OnNewCommandAsync();
+
+            if (e.Key == VirtualKey.O && ctrl)
+                await OnOpenCommandAsync();
+
+            if (e.Key == VirtualKey.S && ctrl)
+                await OnSaveCommandAsync();
         }
+
+        private void HamburgerButton_Click(object sender, RoutedEventArgs e)
+        {
+            SplitView.IsPaneOpen = !SplitView.IsPaneOpen;
+        }
+
+        private async void NewCommand_Click(object sender, RoutedEventArgs e)
+        {
+            await OnNewCommandAsync();
+        }
+
+        private async void OpenCommand_Click(object sender, RoutedEventArgs e)
+        {
+            await OnOpenCommandAsync();
+        }
+
+        private async void SaveCommand_Click(object sender, RoutedEventArgs e)
+        {
+            await OnSaveCommandAsync();
+        }
+
+        private async void ViewModel__DefaultCharsetChanged(object sender, EventArgs e)
+        {
+            await SetDefaultCharsetAsync();
+        }
+
+        private void Document_SaveCommandEnabledChanged(object sender, EventArgs e)
+        {
+            viewModel_.SaveCommandEnabled = document_.SaveCommandEnabled;
+        }
+
+        #endregion
     }
 }

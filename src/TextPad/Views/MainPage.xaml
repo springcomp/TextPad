@@ -42,7 +42,7 @@
                 x:Uid="/Resources/AppBar_SaveCommand"
                           
                 Icon="Save"
-                IsEnabled="{Binding Path=SaveCommandEnabled, Mode=TwoWay}"
+                IsEnabled="{Binding Path=SaveCommandEnabled, Mode=OneWay}"
                 Label="Save"
                 
                 ToolTipService.ToolTip="Save text document"
@@ -53,16 +53,18 @@
                 />
         </CommandBar>
     </Page.TopAppBar>
-    
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBox x:Name="ViewPort"                 
-                 AcceptsReturn="True"
-                 TextWrapping="Wrap"
-                 Padding="0, 0, 10, 0"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                 KeyDown="ViewPort_KeyDown"
-                 TextChanged="ViewPort_TextChanged"
-                 />
+        <Frame x:Name="CurrentFrame">
+            <Frame.ContentTransitions>
+                <TransitionCollection>
+                    <NavigationThemeTransition>
+                        <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                            <EntranceNavigationTransitionInfo/>
+                        </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                    </NavigationThemeTransition>
+                </TransitionCollection>
+            </Frame.ContentTransitions>
+        </Frame>
     </Grid>
 </Page>

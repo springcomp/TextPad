@@ -1,0 +1,2 @@
+- Added CHANGLOG.md.
+- Added a small margin around the displayed text.

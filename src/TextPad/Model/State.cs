@@ -13,7 +13,6 @@ namespace TextPad.Model
         public String FileName { get; set; }
         public OpenState OpenState { get; set; }
         public StorageFile Storage { get; set; }
-        public Boolean Modified { get; set; }
 
         internal void Clear()
         {
@@ -21,7 +20,6 @@ namespace TextPad.Model
             FileName = null;
             OpenState = OpenState.Opened;
             Storage = null;
-            Modified = false;
         }
     }
 

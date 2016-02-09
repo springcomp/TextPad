@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using TextPad.Encodings;
 using TextPad.Model;
 using TextPad.Utils;
 using Windows.ApplicationModel.Resources;

@@ -22,11 +22,21 @@ namespace TextPad.Encodings
 
         /// <summary>
         /// A simple dictionary that maps codePoints to bytes.
-        /// If a codePoint is not in this array and is above 255 then it is not a valid character.
+        /// All codePoints that are not in this array should map to the corresponding byte character.
+        /// If a codePoint is not in this array and is above 255 then it is not a valid character for this encoding.
         /// </summary>
-        protected IDictionary<int /* codePoint */, byte> charToBytes_ = new Dictionary<int, byte>();
+        protected IDictionary<char, byte> charToBytes_ = new Dictionary<char, byte>();
 
         protected CodePageEncoding(int codePage, string name, string webName)
+            : this(codePage, name, webName, EncoderFallback.ReplacementFallback, DecoderFallback.ReplacementFallback)
+        {
+            codePage_ = codePage;
+            encodingName_ = name;
+            webName_ = webName;
+        }
+
+        protected CodePageEncoding(int codePage, string name, string webName, EncoderFallback encoderFallback, DecoderFallback decoderFallback)
+            : base(codePage, encoderFallback, decoderFallback)
         {
             codePage_ = codePage;
             encodingName_ = name;
@@ -68,35 +78,73 @@ namespace TextPad.Encodings
                 var c = chars[index];
                 var code = (int)c;
 
-                var valid = false;
-                byte b = (byte) '?';
-
-                if (charToBytes_.ContainsKey(code))
+                if (charToBytes_.ContainsKey(c))
                 {
-                    b = charToBytes_[code];
-                    valid = true;
+                    var b = charToBytes_[c];
+                    bytes[charIndex + index] = b;
+                    continue;
                 }
 
                 else if (code <= 255)
                 {
-                    b = (byte)code;
+                    var b = (byte)code;
 
                     // codePoint is a byte excluding those that are already mapped
 
                     if (!charToBytes_.Values.Contains(b))
-                        valid = true;
+                    {
+                        bytes[charIndex + index] = b;
+                        continue;
+                    }
                 }
 
-                if (!valid && EncoderFallback != null)
-                {
-                    //var buffer = EncoderFallback.CreateFallbackBuffer();
-                    //while (buffer.Remaining > 0)
-                    //{
-                    //    var next = buffer.GetNextChar();
-                    //}
-               }
+                // if no valid characters could be converted
+                // use the configured fallback mechanism
 
-                bytes[charIndex + index] = b;
+                if (EncoderFallback != null)
+                {
+                    System.Diagnostics.Debug.Assert(EncoderFallback.MaxCharCount == 1);
+
+                    var fallbackBuffer = EncoderFallback.CreateFallbackBuffer();
+                    if (fallbackBuffer.Fallback(c, index))
+                    {
+                        var next = fallbackBuffer.GetNextChar();
+
+                        // recursively use this implementation
+                        // to convert the replacement char to
+                        // its corresponding byte
+
+                        var buffer = new byte[1];
+                        if (GetBytes(new[] { next, }, 0, 1, buffer, 0) == 1)
+                        {
+                            var b = buffer[0];
+                            bytes[charIndex + index] = b;
+                            continue;
+                        }
+
+                        // if the replacement character cannot
+                        // be mapped, simply fallback to a '?'.
+                        // (in practice, this should not happen)
+
+                        else
+                        {
+                            var b = (byte)'?';
+                            bytes[charIndex + index] = b;
+                            continue;
+                        }
+                    }
+                }
+
+                // otherwise, just use a '?' character
+                // (again, in practice, this should not
+                // happen since a fallback should always
+                // be configured on the Encoding.
+
+                else
+                {
+                    var b = (byte)'?';
+                    bytes[charIndex + index] = b;
+                }
             }
 
             return charCount;

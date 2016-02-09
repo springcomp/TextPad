@@ -8,12 +8,12 @@ namespace TextPad.Encodings
 {
     public sealed class Windows1252Encoding : CodePageEncoding
     {
-        public Windows1252Encoding()
-            : base(1252, "Western European (Windows)", "Windows-1252")
+        public Windows1252Encoding(EncoderFallback encoderFallback, DecoderFallback decoderFallback)
+            : base(1252, "Western European (Windows)", "Windows-1252", encoderFallback, decoderFallback)
         {
             byteToChars_ = new char[]
             {
-                     '\u0000' // NULL
+                      '\u0000' // NULL
                     , '\u0001' // SOH
                     , '\u0002' // STX
                     , '\u0003' // ETX
@@ -271,41 +271,41 @@ namespace TextPad.Encodings
                     , '\u00ff' // 'ÿ'
                 };
 
-            charToBytes_ = new Dictionary<int /* codePoint */, byte>()
+            charToBytes_ = new Dictionary<char, byte>()
             {
-                { 338, 140 },
-                { 339, 156 },
-                { 352, 138 },
-                { 353, 154 },
-                { 376, 159 },
-                { 381, 142 },
-                { 382, 158 },
-                { 402, 131 },
-                { 710, 136 },
-                { 732, 152 },
-                { 8211, 150 },
-                { 8212, 151 },
-                { 8216, 145 },
-                { 8217, 146 },
-                { 8218, 130 },
-                { 8220, 147 },
-                { 8221, 148 },
-                { 8222, 132 },
-                { 8224, 134 },
-                { 8225, 135 },
-                { 8226, 149 },
-                { 8230, 133 },
-                { 8240, 137 },
-                { 8249, 139 },
-                { 8250, 155 },
-                { 8364, 128 },
-                { 8482, 153 },
+                { /* '€' */ '\u20ac', 128 },
+                { /* '‚' */ '\u201a', 130 },
+                { /* 'ƒ' */ '\u0192', 131 },
+                { /* '„' */ '\u201e', 132 },
+                { /* '…' */ '\u2026', 133 },
+                { /* '†' */ '\u2020', 134 },
+                { /* '‡' */ '\u2021', 135 },
+                { /* 'ˆ' */ '\u02c6', 136 },
+                { /* '‰' */ '\u2030', 137 },
+                { /* 'Š' */ '\u0160', 138 },
+                { /* '‹' */ '\u2039', 139 },
+                { /* 'Œ' */ '\u0152', 140 },
+                { /* 'Ž' */ '\u017d', 142 },
+                { /* '‘' */ '\u2018', 145 },
+                { /* '’' */ '\u2019', 146 },
+                { /* '“' */ '\u201c', 147 },
+                { /* '”' */ '\u201d', 148 },
+                { /* '•' */ '\u2022', 149 },
+                { /* '–' */ '\u2013', 150 },
+                { /* '—' */ '\u2014', 151 },
+                { /* '˜' */ '\u02dc', 152 },
+                { /* '™' */ '\u2122', 153 },
+                { /* 'š' */ '\u0161', 154 },
+                { /* '›' */ '\u203a', 155 },
+                { /* 'œ' */ '\u0153', 156 },
+                { /* 'ž' */ '\u017e', 158 },
+                { /* 'Ÿ' */ '\u0178', 159 },
             };
         }
 
-        public static Windows1252Encoding Create()
+        public static Windows1252Encoding Create(EncoderFallback encoder, DecoderFallback decoder)
         {
-            return new Windows1252Encoding();
+            return new Windows1252Encoding(encoder, decoder);
         }
     }
 }

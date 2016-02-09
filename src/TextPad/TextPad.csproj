@@ -101,6 +101,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Encodings\CodePageEncoding.cs" />
+    <Compile Include="Encodings\CustomReplacementEncoderFallback.cs" />
+    <Compile Include="Encodings\CustomReplacementDecoderFallback.cs" />
     <Compile Include="Encodings\Windows1252Encoding.cs" />
     <Compile Include="Model\Charset.cs" />
     <Compile Include="Model\DisplayedItem.cs" />

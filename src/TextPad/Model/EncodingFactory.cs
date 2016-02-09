@@ -7,27 +7,93 @@ using TextPad.Encodings;
 
 namespace TextPad.Model
 {
-    public sealed class EncodingFactory
+    public static class EncodingHelper
     {
+        /// <summary>
+        /// Return a <see cref="Encoding" /> object associated with the specified <see cref="Charset" />.
+        /// The Encoding object is associated with custom implementations for the
+        /// <see cref"EncoderFallback" /> and <see cref"DecoderFallback" /> objects so
+        /// that it is possible to determine whether any replacement occurred during decoding.
+        /// </summary>
+        /// <param name="charset"></param>
+        /// <returns></returns>
         public static Encoding GetEncoding(Charset charset)
         {
+            var decoderFallback = new CustomReplacementDecoderFallback();
+            var encoderFallback = new CustomReplacementEncoderFallback();
+
             switch (charset)
             {
-                case Charset.UTF8:
-                    return Encoding.UTF8;
-
-                case Charset.UnicodeLe:
-                    return Encoding.Unicode;
+                case Charset.Western1252:
+                    {
+                        var encoding = Windows1252Encoding.Create(
+                            encoderFallback
+                            , decoderFallback)
+                            ;
+                        return encoding;
+                    }
 
                 case Charset.UnicodeBe:
-                    return Encoding.BigEndianUnicode;
+                    {
+                        var cp = Encoding.BigEndianUnicode.CodePage;
+                        var encoding = Encoding.GetEncoding(cp
+                            , EncoderFallback.ReplacementFallback
+                            , decoderFallback
+                            );
+                        return encoding;
+                    }
 
-                case Charset.Western1252:
-                    return Windows1252Encoding.Create();
+                case Charset.UnicodeLe:
+                    {
+                        var cp = Encoding.Unicode.CodePage;
+                        var encoding = Encoding.GetEncoding(cp
+                            , EncoderFallback.ReplacementFallback
+                            , decoderFallback
+                            );
+                        return encoding;
+                    }
 
+                case Charset.UTF8:
                 default:
-                    return Encoding.UTF8;
+                    {
+                        var cp = Encoding.UTF8.CodePage;
+                        var encoding = Encoding.GetEncoding(cp
+                            , EncoderFallback.ReplacementFallback
+                            , decoderFallback
+                            );
+                        return encoding;
+                    }
             }
+        }
+
+        /// <summary>
+        /// Returns whether the previous decoding was successfull.
+        /// i.e. no replacement fallback did occur.
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public static bool DecodedSuccessfully(this Encoding encoding)
+        {
+            var decoderFallback = encoding.DecoderFallback;
+            var customFallback = decoderFallback as CustomReplacementDecoderFallback;
+            if (customFallback == null)
+                return true;
+
+            return !customFallback.WasTriggered;
+        }
+
+        /// <summary>
+        /// Reset the state of the decoder fallback.
+        /// </summary>
+        /// <param name="encoding"></param>
+        public static void ResetDecoderFallback(this Encoding encoding)
+        {
+            var decoderFallback = encoding.DecoderFallback;
+            var customFallback = decoderFallback as CustomReplacementDecoderFallback;
+            if (customFallback == null)
+                return;
+
+            customFallback.Reset();
         }
     }
 }

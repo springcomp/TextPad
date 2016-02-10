@@ -108,6 +108,9 @@
     <Compile Include="Model\DisplayedItem.cs" />
     <Compile Include="Model\EncodingFactory.cs" />
     <Compile Include="Model\Settings.cs" />
+    <Compile Include="Services\Interop\IToolbarStateService.cs" />
+    <Compile Include="Services\ServiceRepository.cs" />
+    <Compile Include="Services\ToolbarStateService.cs" />
     <Compile Include="Utils\DialogBox.cs" />
     <Compile Include="Utils\MessageBox.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
@@ -164,6 +167,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -7,6 +7,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using TextPad.Model;
+using TextPad.Services;
+using TextPad.Services.Interop;
 using TextPad.Utils;
 using TextPad.ViewModels;
 using Windows.ApplicationModel.Activation;
@@ -38,6 +40,8 @@ namespace TextPad.Views
         private ApplicationViewModel viewModel_ = new ApplicationViewModel();
         private DocumentViewModel document_;
 
+        private IToolbarStateService toolbarStateService_;
+
         private Settings settingsXXX_ = Settings.Load();
 
         public MainPage()
@@ -54,11 +58,11 @@ namespace TextPad.Views
 
         private void SetDocument(DocumentViewModel document = null)
         {
-            if (document_ != null)
-                document_.SaveCommandEnabledChanged -= Document_SaveCommandEnabledChanged;
+            //if (document_ != null)
+            //    document_.SaveCommandEnabledChanged -= ToolbarState_SaveCommandEnabledChanged;
 
             document_ = document ?? new DocumentViewModel();
-            document_.SaveCommandEnabledChanged += Document_SaveCommandEnabledChanged;
+            //document_.SaveCommandEnabledChanged += ToolbarState_SaveCommandEnabledChanged;
         }
 
         private async Task SetDefaultCharsetAsync()
@@ -96,7 +100,7 @@ namespace TextPad.Views
 
         private async Task<bool> SetDefaultCharsetAsync(Charset charset)
         {
-            var encoding = EncodingFactory.GetEncoding(charset);
+            var encoding = EncodingHelper.GetEncoding(charset);
             return await document_.SetEncodingAsync(encoding);
         }
 
@@ -131,6 +135,12 @@ namespace TextPad.Views
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (toolbarStateService_ == null)
+            {
+                toolbarStateService_ = ServiceRepository.Instance.ToolbarState;
+                toolbarStateService_.SaveCommandEnabledChanged += ToolbarState_SaveCommandEnabledChanged;
+            }
+
             await SetDefaultCharsetAsync();
 
             var path = e.Parameter as StorageFile;
@@ -187,7 +197,7 @@ namespace TextPad.Views
             await SetDefaultCharsetAsync();
         }
 
-        private void Document_SaveCommandEnabledChanged(object sender, EventArgs e)
+        private void ToolbarState_SaveCommandEnabledChanged(object sender, EventArgs e)
         {
             viewModel_.SaveCommandEnabled = document_.SaveCommandEnabled;
         }

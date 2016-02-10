@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using TextPad.Encodings;
 using TextPad.Model;
+using TextPad.Services;
+using TextPad.Services.Interop;
 using TextPad.Utils;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
@@ -19,10 +21,20 @@ namespace TextPad.ViewModels
     public sealed class DocumentViewModel : INotifyPropertyChanged
     {
         private string text_;
-        private bool saveCommandEnabled_ = false;
+
+        private readonly IToolbarStateService toolbarStateService_;
+
+        public DocumentViewModel()
+            : this(ServiceRepository.Instance.ToolbarState)
+        {
+        }
+
+        public DocumentViewModel(IToolbarStateService toolbarStateService)
+        {
+            toolbarStateService_ = toolbarStateService;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public event EventHandler SaveCommandEnabledChanged;
 
         public Encoding Encoding { get; private set; }
 
@@ -48,16 +60,8 @@ namespace TextPad.ViewModels
 
         public bool SaveCommandEnabled
         {
-            get { return saveCommandEnabled_; }
-            set
-            {
-                if (saveCommandEnabled_ != value)
-                {
-                    saveCommandEnabled_ = value;
-                    RaisePropertyChanged("SaveCommandEnabled");
-                    RaiseSaveCommandEnabledChanged();
-                }
-            }
+            get { return toolbarStateService_.SaveCommandEnabled; }
+            set { toolbarStateService_.SaveCommandEnabled = value; }
         }
 
         #region Operations
@@ -278,7 +282,7 @@ namespace TextPad.ViewModels
             // if no BOM is present, just use the default user-specified encoding
 
             var settings = Settings.Load();
-            return EncodingFactory.GetEncoding(settings.DefaultCharset);
+            return EncodingHelper.GetEncoding(settings.DefaultCharset);
         }
 
         private void EnableSaveCommand(bool enabled = true)
@@ -292,13 +296,6 @@ namespace TextPad.ViewModels
             var handler = PropertyChanged;
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void RaiseSaveCommandEnabledChanged()
-        {
-            var handler = SaveCommandEnabledChanged;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
         }
 
         #endregion

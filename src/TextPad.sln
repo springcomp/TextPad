@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextPad", "TextPad\TextPad.csproj", "{023E7720-DA1D-4858-9AB4-CE6ECED26858}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeSingleByteEncoding", "ConsoleApplication1\MakeSingleByteEncoding.csproj", "{51B3B912-A5D7-435C-87A5-A11AFC596626}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeSingleByteEncoding", "MakeSingleByteEncoding\MakeSingleByteEncoding.csproj", "{51B3B912-A5D7-435C-87A5-A11AFC596626}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

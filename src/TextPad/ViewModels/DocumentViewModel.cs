@@ -160,19 +160,31 @@ namespace TextPad.ViewModels
             // TODO: handle other FileUpdateStatus ?
         }
 
+        /// <summary>
+        /// Save the text to persistent storage.
+        /// </summary>
+        /// <returns>False if processing was canceled by the user.</returns>
         public async Task<bool> SavePendingChangesAsync()
         {
             if (IsModified)
             {
-                if (await DialogBox.ConfirmSaveChangesDialogAsync() == MessageBox.Result.No)
-                    return true;
+                var dialogResult = await DialogBox.ConfirmSaveChangesDialogAsync();
 
-                var path = await SaveAsync();
-                if (path == null)
+                if (dialogResult == MessageBox.Result.Cancel)
                     return false;
 
-                Path = path;
-                Filename = Path.Name;
+                else if (dialogResult == MessageBox.Result.No)
+                    return true;
+
+                else if (dialogResult == MessageBox.Result.Yes)
+                {
+                    var path = await SaveAsync();
+                    if (path == null)
+                        return false;
+
+                    Path = path;
+                    Filename = Path.Name;
+                }
 
                 return true;
             }

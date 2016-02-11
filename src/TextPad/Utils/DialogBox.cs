@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Popups;
 
@@ -10,12 +6,12 @@ namespace TextPad.Utils
 {
     public sealed class DialogBox
     {
-        public static async Task<MessageBox.Result> ConfirmSaveChangesDialogAsync()
+        public static async Task<MessageBox.Result> ConfirmKeepAlternateEncodingAsync()
         {
             var resources = new ResourceLoader();
 
-            var content = resources.GetString("/Resources/MessageDialog_ConfirmSaveChanges_Content");
-            var title = resources.GetString("/Resources/MessageDialog_ConfirmSaveChanges_Title");
+            var content = resources.GetString("/Resources/MessageDialog_Question_KeepAlternateEncoding_Content");
+            var title = resources.GetString("/Resources/MessageDialog_Question_KeepAlternateEncoding_Title");
             var yes = resources.GetString("/Resources/MessageDialog_Yes");
             var no = resources.GetString("/Resources/MessageDialog_No");
 
@@ -24,6 +20,27 @@ namespace TextPad.Utils
                 , title
                 , new UICommand(yes, cmd => { })
                 , new UICommand(no, cmd => { })
+                );
+
+            return result;
+        }
+
+        public static async Task<MessageBox.Result> ConfirmSaveChangesDialogAsync()
+        {
+            var resources = new ResourceLoader();
+
+            var content = resources.GetString("/Resources/MessageDialog_Question_SaveChanges_Content");
+            var title = resources.GetString("/Resources/MessageDialog_Question_SaveChanges_Title");
+            var yes = resources.GetString("/Resources/MessageDialog_Yes");
+            var no = resources.GetString("/Resources/MessageDialog_No");
+            var cancel = resources.GetString("/Resources/MessageDialog_Cancel");
+
+            var result = await MessageBox.ShowAsync(
+                  content
+                , title
+                , new UICommand(yes, cmd => { })
+                , new UICommand(no, cmd => { })
+                , new UICommand(cancel, cmd => { })
                 );
 
             return result;

@@ -34,30 +34,21 @@ namespace TextPad.Views
     /// </summary>
     public sealed partial class DocumentView : Page
     {
+        private DocumentViewModel document_;
+
         public DocumentView()
         {
             this.InitializeComponent();
-            SetDataContext();
-        }
-
-        private DocumentViewModel Document
-        {
-            get { return DataContext as DocumentViewModel; }
-        }
-
-        private void SetDataContext(DocumentViewModel document = null)
-        {
-            DataContext = document ?? new DocumentViewModel();
         }
 
         #region Overrides
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            var document = e.Parameter as DocumentViewModel;
-            System.Diagnostics.Debug.Assert(document != null);
+            document_ = e.Parameter as DocumentViewModel;
+            System.Diagnostics.Debug.Assert(document_ != null);
 
-            SetDataContext(document);
+            DataContext = document_;
         }
 
         #endregion
@@ -98,20 +89,23 @@ namespace TextPad.Views
             ViewPort.SelectionStart = position + 1;
         }
 
-        #endregion
-
+        /// <summary>
+        /// Refresh the state of the command bar buttons when text changes.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ViewPort_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (Document.IsMakingTechnicalChanges)
+            if (document_.IsEncodingChanging)
             {
-                Document.StopMakingTechnicalChanges();
+                document_.EndChangeEncoding();
+                document_.IsModified = false;
                 return;
             }
 
-            // only use this event to refresh the state of command bar buttons
-
-            Document.IsModified = true;
-            Document.SaveCommandEnabled = true;
+            document_.IsModified = true;
         }
+
+        #endregion
     }
 }

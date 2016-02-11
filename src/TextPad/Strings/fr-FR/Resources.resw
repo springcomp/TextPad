@@ -159,10 +159,10 @@
 Voulez-vous sauvegarder les changements ?</value>
   </data>
   <data name="MessageDialog_Error_NotATextFile_Content" xml:space="preserve">
-    <value>The document does not appear to be a valid text file.</value>
+    <value>Ce document ne semble pas être un fichier texte valide.</value>
   </data>
   <data name="MessageDialog_Error_NotATextFile_Title" xml:space="preserve">
-    <value>Invalid text document</value>
+    <value>Texte invalide</value>
   </data>
   <data name="MessageDialog_No" xml:space="preserve">
     <value>Non</value>
@@ -184,6 +184,13 @@ Voulez-vous sauvegarder les changements ?</value>
   </data>
   <data name="MessageDialog_OK" xml:space="preserve">
     <value>OK</value>
+  </data>
+  <data name="MessageDialog_Question_KeepAlternateEncoding_Content" xml:space="preserve">
+    <value>Certains caractères n'ont pas pu être interprétés correctement.
+Voulez-vous conserver l'utilisation de ce jeu de caractères ?</value>
+  </data>
+  <data name="MessageDialog_Question_KeepAlternateEncoding_Title" xml:space="preserve">
+    <value>Jeu de caractères incorrect</value>
   </data>
   <data name="MessageDialog_Cancel" xml:space="preserve">
     <value>Annuler</value>

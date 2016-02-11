@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
-using TextPad.Encodings;
 using TextPad.Model;
 using TextPad.Services;
 using TextPad.Services.Interop;
@@ -219,7 +216,10 @@ namespace TextPad.ViewModels
 
             Encoding = encoding;
 
-            return true;
+            // returns whether using this encoding
+            // was successfull.
+
+            return encoding.DecodedSuccessfully();
         }
 
         #endregion

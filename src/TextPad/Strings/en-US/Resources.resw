@@ -185,6 +185,13 @@ Do you want to save the current changes?</value>
   <data name="About_Review_PleaseReviewApp.Text" xml:space="preserve">
     <value>Please, review this app</value>
   </data>
+  <data name="MessageDialog_Question_KeepAlternateEncoding_Content" xml:space="preserve">
+    <value>Some characters could not be correctly decoded using the specified encoding.
+Do you want to keep using this encoding anyway?</value>
+  </data>
+  <data name="MessageDialog_Question_KeepAlternateEncoding_Title" xml:space="preserve">
+    <value>Invalid encoding</value>
+  </data>
   <data name="MessageDialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>

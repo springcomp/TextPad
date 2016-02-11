@@ -20,7 +20,7 @@ namespace TextPad.Model
         public static Encoding GetEncoding(Charset charset)
         {
             var decoderFallback = new CustomReplacementDecoderFallback();
-            var encoderFallback = new CustomReplacementEncoderFallback();
+            var encoderFallback = EncoderFallback.ReplacementFallback;
 
             switch (charset)
             {

@@ -89,8 +89,9 @@
                         HorizontalAlignment="Left"
                         DisplayMemberPath="Label"
                         ItemsSource="{Binding Path=AvailableCharsets, Mode=OneTime}"
-                        SelectedItem="{Binding Path=CurrentCharset, Mode=TwoWay}"
+                        SelectedItem="{Binding Path=CurrentCharset, Mode=OneWay}"
                         ToolTipService.Placement="Mouse"
+                        SelectionChanged="DefaultCharset_SelectionChanged"
                         />
                 </StackPanel>
                 <!-- About information -->

@@ -37,40 +37,30 @@ namespace TextPad.Views
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private ApplicationViewModel viewModel_ = new ApplicationViewModel();
+        private ApplicationViewModel application_ = new ApplicationViewModel();
         private DocumentViewModel document_;
 
-        private IToolbarStateService toolbarStateService_;
-
-        private Settings settingsXXX_ = Settings.Load();
+        private ISettingsService settingsService_;
 
         public MainPage()
         {
             this.InitializeComponent();
-            this.DataContext = viewModel_;
+            this.DataContext = application_;
 
             SetDocument();
-
-            viewModel_.DefaultCharsetChanged += ViewModel__DefaultCharsetChanged;
         }
 
         public Frame View { get { return CurrentFrame; } }
 
         private void SetDocument(DocumentViewModel document = null)
         {
-            //if (document_ != null)
-            //    document_.SaveCommandEnabledChanged -= ToolbarState_SaveCommandEnabledChanged;
-
             document_ = document ?? new DocumentViewModel();
-            //document_.SaveCommandEnabledChanged += ToolbarState_SaveCommandEnabledChanged;
         }
 
         private async Task SetDefaultCharsetAsync()
         {
-            var settings = Settings.Load();
-
-            var newCharset = viewModel_.CurrentCharset.Key;
-            var currentCharset = settings.DefaultCharset;
+            var newCharset = application_.CurrentCharset.Key;
+            var currentCharset = settingsService_.DefaultCharset;
 
             // save new default charset
 
@@ -87,14 +77,13 @@ namespace TextPad.Views
                     // make sure to raise a PropertyChanged event
                     // to restore the combo box selection
 
-                    viewModel_.SetCurrentCharset(currentCharset, true);
+                    //viewModel_.SetCurrentCharset(currentCharset, true);
                     return;
                 }
 
                 // otherwise, we save the new default charset setting
 
-                settings.DefaultCharset = viewModel_.CurrentCharset.Key;
-                settings.Save();
+                settingsService_.DefaultCharset = application_.CurrentCharset.Key;
             }
         }
 
@@ -135,11 +124,8 @@ namespace TextPad.Views
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (toolbarStateService_ == null)
-            {
-                toolbarStateService_ = ServiceRepository.Instance.ToolbarState;
-                toolbarStateService_.SaveCommandEnabledChanged += ToolbarState_SaveCommandEnabledChanged;
-            }
+            if (settingsService_ == null)
+                settingsService_ = ServiceRepository.Instance.Settings;
 
             await SetDefaultCharsetAsync();
 
@@ -192,14 +178,41 @@ namespace TextPad.Views
             await OnSaveCommandAsync();
         }
 
-        private async void ViewModel__DefaultCharsetChanged(object sender, EventArgs e)
+        private async void DefaultCharset_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            await SetDefaultCharsetAsync();
-        }
+            // request a change of default charset
 
-        private void ToolbarState_SaveCommandEnabledChanged(object sender, EventArgs e)
-        {
-            viewModel_.SaveCommandEnabled = document_.SaveCommandEnabled;
+            var selectedCharset = ((DisplayedItem<Charset>)DefaultCharset.SelectedItem).Key;
+
+            // this asks the currently opened document to re-interpret its contents
+            // with the new charset.
+
+            var encoding = EncodingHelper.GetEncoding(selectedCharset);
+            var succeeded = await document_.SetEncodingAsync(encoding);
+
+            // if replacement of unrecognized characters occurred during
+            // decoding, ask the user whether to keep the document or
+            // try another one
+
+            if (!succeeded)
+            {
+                if (await DialogBox.ConfirmKeepAlternateEncodingAsync() != MessageBox.Result.Yes)
+                {
+                    // reset the combo box selection
+                    // to its original value. Since the data binding for the 
+                    // combo box is 'OneWay' the underlying value did not change
+                    // when the combo box selection changed.
+
+                    DefaultCharset.SelectedItem = application_.CurrentCharset;
+                    return;
+                }
+            }
+
+            // if that succeeds, we change the underlying settings.
+            // because the settings service raises an event, subscribers can
+            // be notified of the actual charset change.
+
+            settingsService_.DefaultCharset = selectedCharset;
         }
 
         #endregion

@@ -1,27 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TextPad.Model;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
+
+using TextPad.Services;
+using TextPad.Services.Interop;
 
 namespace TextPad.ViewModels
 {
-    using Windows.ApplicationModel;
     using ObservableCharsetCollection = ObservableCollection<DisplayedItem<Charset>>;
 
     public sealed class ApplicationViewModel : INotifyPropertyChanged
     {
-        private DisplayedItem<Charset> currentCharset_;
-        private Boolean saveCommandEnabled_;
+        private readonly ISettingsService settingsService_;
+        private readonly IToolbarStateService toolbarStateService_;
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public event EventHandler DefaultCharsetChanged;
 
         public ApplicationViewModel()
+            : this(
+                    ServiceRepository.Instance.Settings
+                  , ServiceRepository.Instance.ToolbarState
+                  )
+        {
+        }
+
+        public ApplicationViewModel(
+              ISettingsService settingsService
+            , IToolbarStateService toolbarStateService
+            )
         {
             var resources = new ResourceLoader();
 
@@ -32,7 +42,15 @@ namespace TextPad.ViewModels
                     new DisplayedItem<Charset> { Key = Charset.Western1252, Label = resources.GetString("/Resources/Encoding_Western1252"), },
                 });
 
-            SetDefaultCharset();
+            // register an event for changes to the DefaultCharset Setting property.
+
+            settingsService_ = settingsService;
+            settingsService_.DefaultCharsetChanged += SettingsService__DefaultCharsetChanged;
+
+            // register an event for changes to the SaveCommandEnabled state.
+
+            toolbarStateService_ = toolbarStateService;
+            toolbarStateService_.SaveCommandEnabledChanged += ToolbarStateService__SaveCommandEnabledChanged;
         }
 
         /// <summary>
@@ -45,12 +63,17 @@ namespace TextPad.ViewModels
         /// </summary>
         public DisplayedItem<Charset> CurrentCharset
         {
-            get { return currentCharset_; }
+            get
+            {
+                return AvailableCharsets.Single(c => c.Key == settingsService_.DefaultCharset);
+            }
             set
             {
-                currentCharset_ = value;
-                RaisePropertyChanged("CurrentCharset");
-                RaiseDefaultCharsetChanged();
+                if (settingsService_.DefaultCharset != value.Key)
+                {
+                    settingsService_.DefaultCharset = value.Key;
+                    RaisePropertyChanged("CurrentCharset");
+                }
             }
         }
 
@@ -77,27 +100,33 @@ namespace TextPad.ViewModels
         /// </summary>
         public Boolean SaveCommandEnabled
         {
-            get { return saveCommandEnabled_; }
+            get { return toolbarStateService_.SaveCommandEnabled; }
             set
             {
-                saveCommandEnabled_ = value;
-                RaisePropertyChanged("SaveCommandEnabled");
+                if (toolbarStateService_.SaveCommandEnabled != value)
+                {
+                    toolbarStateService_.SaveCommandEnabled = value;
+                    RaisePropertyChanged("SaveCommandEnabled");
+                }
             }
         }
 
-        public void SetDefaultCharset()
+        private void SettingsService__DefaultCharsetChanged(object sender, EventArgs e)
         {
-            var settings = Settings.Load();
-            SetCurrentCharset(settings.DefaultCharset, false);
+            // the default charset setting changed
+            // raise a property change to update the
+            // combo box in the navigation pane.
+
+            RaisePropertyChanged("CurrentCharset");
         }
 
-        public void SetCurrentCharset(Charset charset, bool raisePropertyChanged = true)
+        private void ToolbarStateService__SaveCommandEnabledChanged(object sender, EventArgs e)
         {
-            var selectedCharset = AvailableCharsets.SingleOrDefault(c => c.Key == charset);
-            currentCharset_ = (selectedCharset == null) ? AvailableCharsets[0] : selectedCharset;
+            // The save command enabled state changed.
+            // raise a property change to update the
+            // combo box in the toolbar
 
-            if (raisePropertyChanged)
-                RaisePropertyChanged("CurrentCharset");
+            RaisePropertyChanged("SaveCommandEnabled");
         }
 
         private void RaisePropertyChanged(string propertyName)
@@ -105,13 +134,6 @@ namespace TextPad.ViewModels
             var handler = PropertyChanged;
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void RaiseDefaultCharsetChanged()
-        {
-            var handler = DefaultCharsetChanged;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
         }
     }
 }

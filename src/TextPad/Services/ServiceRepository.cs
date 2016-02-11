@@ -6,6 +6,7 @@ namespace TextPad.Services
     {
         private static ServiceRepository instance_ = new ServiceRepository();
 
+        private ISettingsService settingsService_;
         private IToolbarStateService toolbarStateService_;
 
         static ServiceRepository()
@@ -21,6 +22,15 @@ namespace TextPad.Services
             get { return instance_; }
         }
 
+        public ISettingsService Settings
+        {
+            get
+            {
+                if (settingsService_ == null)
+                    settingsService_ = new SettingsService();
+                return settingsService_;
+            }
+        }
         public IToolbarStateService ToolbarState
         {
             get

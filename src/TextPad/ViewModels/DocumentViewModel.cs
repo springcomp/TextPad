@@ -22,15 +22,23 @@ namespace TextPad.ViewModels
     {
         private string text_;
 
+        private readonly ISettingsService settingsService_;
         private readonly IToolbarStateService toolbarStateService_;
 
         public DocumentViewModel()
-            : this(ServiceRepository.Instance.ToolbarState)
+            : this(
+                    ServiceRepository.Instance.Settings
+                  , ServiceRepository.Instance.ToolbarState
+                  )
         {
         }
 
-        public DocumentViewModel(IToolbarStateService toolbarStateService)
+        public DocumentViewModel(
+              ISettingsService settingsService
+            , IToolbarStateService toolbarStateService
+            )
         {
+            settingsService_ = settingsService;
             toolbarStateService_ = toolbarStateService;
         }
 
@@ -48,9 +56,13 @@ namespace TextPad.ViewModels
         /// we really don't want the document state to
         /// be modified.
         /// </summary>
-        public bool IsMakingTechnicalChanges { get; internal set; }
+        public bool IsEncodingChanging { get; internal set; }
 
-        public bool IsModified { get; set; }
+        public bool IsModified
+        {
+            get { return toolbarStateService_.SaveCommandEnabled; }
+            set { toolbarStateService_.SaveCommandEnabled = value; }
+        }
 
         public string Text
         {
@@ -58,17 +70,11 @@ namespace TextPad.ViewModels
             set { SetTextContent(value); }
         }
 
-        public bool SaveCommandEnabled
-        {
-            get { return toolbarStateService_.SaveCommandEnabled; }
-            set { toolbarStateService_.SaveCommandEnabled = value; }
-        }
-
         #region Operations
 
-        public void StopMakingTechnicalChanges()
+        public void EndChangeEncoding()
         {
-            IsMakingTechnicalChanges = false;
+            IsEncodingChanging = false;
         }
 
         public async Task CreateAsync()
@@ -101,8 +107,7 @@ namespace TextPad.ViewModels
 
             Path = path;
             Filename = path.Name;
-
-            EnableSaveCommand(false);
+            IsModified = false;
         }
 
         public async Task<StorageFile> SaveAsync()
@@ -147,10 +152,12 @@ namespace TextPad.ViewModels
 
             var status = await CachedFileManager.CompleteUpdatesAsync(path);
             if (status == FileUpdateStatus.Complete)
-                EnableSaveCommand(false);
+                IsModified = false;
 
             Path = path;
             Filename = path.Name;
+
+            // TODO: handle other FileUpdateStatus ?
         }
 
         public async Task<bool> SavePendingChangesAsync()
@@ -189,21 +196,11 @@ namespace TextPad.ViewModels
                 // it semantically contains the same text
                 // 
 
-                // setting IsMakingTechnicalChanges instructs
+                // setting IsEncodingChanging instructs
                 // the view to ignore the modifications
 
-                IsMakingTechnicalChanges = true;
-
-                text_ = text;
-
-                // only notify PropertyChanged on "Text"
-
-                RaisePropertyChanged("Text");
-
-                // force the modified state to false
-
-                IsModified = false;
-                SaveCommandEnabled = false;
+                IsEncodingChanging = true;
+                SetTextContent(text);
             }
 
             // store the current encoding for later use
@@ -222,7 +219,7 @@ namespace TextPad.ViewModels
             Encoding = Encoding.UTF8;
 
             SetTextContent("", false);
-            EnableSaveCommand(false);
+            IsModified = false;
         }
 
         private void SetTextContent(string text, bool raisePropertyChanged = true)
@@ -235,7 +232,6 @@ namespace TextPad.ViewModels
                 {
                     RaisePropertyChanged("Text");
                     IsModified = true;
-                    SaveCommandEnabled = true;
                 }
             }
         }
@@ -281,14 +277,7 @@ namespace TextPad.ViewModels
 
             // if no BOM is present, just use the default user-specified encoding
 
-            var settings = Settings.Load();
-            return EncodingHelper.GetEncoding(settings.DefaultCharset);
-        }
-
-        private void EnableSaveCommand(bool enabled = true)
-        {
-            IsModified = enabled;
-            SaveCommandEnabled = enabled;
+            return EncodingHelper.GetEncoding(settingsService_.DefaultCharset);
         }
 
         private void RaisePropertyChanged(string propertyName)

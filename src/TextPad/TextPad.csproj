@@ -108,8 +108,10 @@
     <Compile Include="Model\DisplayedItem.cs" />
     <Compile Include="Model\EncodingFactory.cs" />
     <Compile Include="Model\Settings.cs" />
+    <Compile Include="Services\Interop\ISerttingsService.cs" />
     <Compile Include="Services\Interop\IToolbarStateService.cs" />
     <Compile Include="Services\ServiceRepository.cs" />
+    <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\ToolbarStateService.cs" />
     <Compile Include="Utils\DialogBox.cs" />
     <Compile Include="Utils\MessageBox.cs" />

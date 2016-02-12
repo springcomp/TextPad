@@ -11,6 +11,8 @@ namespace TextPad.Model
         UTF8 = 0,
         UnicodeLe,
         UnicodeBe,
-        Western1252,
+        WesternEurope,
+        CentralEasternEurope,
+        Greece
     }
 }

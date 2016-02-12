@@ -24,7 +24,25 @@ namespace TextPad.Model
 
             switch (charset)
             {
-                case Charset.Western1252:
+                case Charset.Greece:
+                    {
+                        var encoding = Windows1253Encoding.Create(
+                            encoderFallback
+                            , decoderFallback)
+                            ;
+                        return encoding;
+                    }
+
+                case Charset.CentralEasternEurope:
+                    {
+                        var encoding = Windows1250Encoding.Create(
+                            encoderFallback
+                            , decoderFallback)
+                            ;
+                        return encoding;
+                    }
+
+                case Charset.WesternEurope:
                     {
                         var encoding = Windows1252Encoding.Create(
                             encoderFallback

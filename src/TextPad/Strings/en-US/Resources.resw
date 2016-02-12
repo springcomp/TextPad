@@ -144,8 +144,8 @@
   <data name="Encoding_UTF8" xml:space="preserve">
     <value>Unicode (UTF-8)</value>
   </data>
-  <data name="Encoding_Western1252" xml:space="preserve">
-    <value>Western Europe (Windows 1252)</value>
+  <data name="Encoding_WesternEurope_1252" xml:space="preserve">
+    <value>Western Europe</value>
   </data>
   <data name="FileSavePicker_FileTypeChoice_TextDocument" xml:space="preserve">
     <value>Text file</value>
@@ -195,5 +195,11 @@ Do you want to keep using this encoding anyway?</value>
   </data>
   <data name="MessageDialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="Encoding_CentralEasternEurope_1250" xml:space="preserve">
+    <value>Central and Eastern Europe</value>
+  </data>
+  <data name="Encoding_Greece_1253" xml:space="preserve">
+    <value>Greece</value>
   </data>
 </root>

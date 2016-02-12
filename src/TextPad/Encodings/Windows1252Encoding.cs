@@ -6,7 +6,7 @@ namespace TextPad.Encodings
     public sealed class Windows1252Encoding : CodePageEncoding
     {
         public Windows1252Encoding(EncoderFallback encoderFallback, DecoderFallback decoderFallback)
-            : base(1252, "Western European (Windows)", "Windows-1252", encoderFallback, decoderFallback)
+            : base(1252, "Western Europe (Windows)", "Windows-1252", encoderFallback, decoderFallback)
         {
             byteToChars_ = new char[]
             {

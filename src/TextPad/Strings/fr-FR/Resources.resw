@@ -144,8 +144,8 @@
   <data name="Encoding_UTF8" xml:space="preserve">
     <value>Unicode (UTF-8)</value>
   </data>
-  <data name="Encoding_Western1252" xml:space="preserve">
-    <value>Europe occidentale (Windows 1252)</value>
+  <data name="Encoding_WesternEurope_1252" xml:space="preserve">
+    <value>Europe occidentale</value>
   </data>
   <data name="FileSavePicker_FileTypeChoice_TextDocument" xml:space="preserve">
     <value>Fichier texte</value>
@@ -195,5 +195,11 @@ Voulez-vous conserver l'utilisation de ce jeu de caractères ?</value>
   </data>
   <data name="MessageDialog_Cancel" xml:space="preserve">
     <value>Annuler</value>
+  </data>
+  <data name="Encoding_Greece_1253" xml:space="preserve">
+    <value>Grèce</value>
+  </data>
+  <data name="Encoding_CentralEasternEurope_1250" xml:space="preserve">
+    <value>Europe du centre et de l'est</value>
   </data>
 </root>

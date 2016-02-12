@@ -39,7 +39,9 @@ namespace TextPad.ViewModels
                     new DisplayedItem<Charset> { Key = Charset.UTF8, Label = resources.GetString("/Resources/Encoding_UTF8"), },
                     new DisplayedItem<Charset> { Key = Charset.UnicodeLe, Label = resources.GetString("/Resources/Encoding_UnicodeLe"), },
                     new DisplayedItem<Charset> { Key = Charset.UnicodeBe, Label = resources.GetString("/Resources/Encoding_UnicodeBe"), },
-                    new DisplayedItem<Charset> { Key = Charset.Western1252, Label = resources.GetString("/Resources/Encoding_Western1252"), },
+                    new DisplayedItem<Charset> { Key = Charset.CentralEasternEurope, Label = resources.GetString("/Resources/Encoding_CentralEasternEurope_1250"), },
+                    new DisplayedItem<Charset> { Key = Charset.WesternEurope, Label = resources.GetString("/Resources/Encoding_WesternEurope_1252"), },
+                    new DisplayedItem<Charset> { Key = Charset.Greece, Label = resources.GetString("/Resources/Encoding_Greece_1253"), },
                 });
 
             // register an event for changes to the DefaultCharset Setting property.

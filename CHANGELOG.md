@@ -1,6 +1,8 @@
 Version 1.1.7.0
 
  * Added an error when trying to open a potentially invalid text file.
+ * Added support for Central and Eastern European (1250) encoding.
+ * Added support for Greek (1253) encoding.
 
 
 Version 1.1.6.0

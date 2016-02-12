@@ -104,6 +104,7 @@ namespace TextPad.ViewModels
 
             if (!Encoding.DecodedSuccessfully())
             {
+                toolbarStateService_.IsPaneOpen = true;
                 await DialogBox.ErrorInvalidEncodingAsync();
                 Encoding.ResetDecoderFallback();
                 return;

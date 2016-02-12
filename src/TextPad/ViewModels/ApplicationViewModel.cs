@@ -51,6 +51,7 @@ namespace TextPad.ViewModels
 
             toolbarStateService_ = toolbarStateService;
             toolbarStateService_.SaveCommandEnabledChanged += ToolbarStateService__SaveCommandEnabledChanged;
+            toolbarStateService_.IsPaneOpenChanged += ToolbarStateService__IsPaneOpenChanged;
         }
 
         /// <summary>
@@ -96,6 +97,23 @@ namespace TextPad.ViewModels
         }
 
         /// <summary>
+        /// Specifies whether the left NavigationPane is opened.
+        /// </summary>
+        public Boolean IsPaneOpen
+        {
+            get { return toolbarStateService_.IsPaneOpen; }
+            set
+            {
+                if (toolbarStateService_.IsPaneOpen != value)
+                {
+                    toolbarStateService_.IsPaneOpen = value;
+                    RaisePropertyChanged("IsPaneOpen");
+                    System.Diagnostics.Debug.WriteLine("IsPaneOpen = {0}", toolbarStateService_.IsPaneOpen);
+                }
+            }
+        }
+
+        /// <summary>
         /// Specifies whether the SaveCommand is enabled in the CommandBar.
         /// </summary>
         public Boolean SaveCommandEnabled
@@ -118,6 +136,11 @@ namespace TextPad.ViewModels
             // combo box in the navigation pane.
 
             RaisePropertyChanged("CurrentCharset");
+        }
+
+        private void ToolbarStateService__IsPaneOpenChanged(object sender, EventArgs e)
+        {
+            RaisePropertyChanged("IsPaneOpen");
         }
 
         private void ToolbarStateService__SaveCommandEnabledChanged(object sender, EventArgs e)

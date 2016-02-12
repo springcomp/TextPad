@@ -6,9 +6,24 @@ namespace TextPad.Services
 {
     public sealed class ToolbarStateService : IToolbarStateService
     {
+        private bool isPaneOpen_ = false;
         private bool saveCommandEnabled_ = false;
 
+        public event EventHandler IsPaneOpenChanged;
         public event EventHandler SaveCommandEnabledChanged;
+
+        public bool IsPaneOpen
+        {
+            get { return isPaneOpen_; }
+            set
+            {
+                if (isPaneOpen_ != value)
+                {
+                    isPaneOpen_ = value;
+                    RaiseIsPaneOpenChanged();
+                }
+            }
+        }
 
         public bool SaveCommandEnabled
         {
@@ -23,9 +38,18 @@ namespace TextPad.Services
             }
         }
 
+        private void RaiseIsPaneOpenChanged()
+        {
+            RaiseEvent(IsPaneOpenChanged);
+        }
+
         private void RaiseSaveCommandEnabledChanged()
         {
-            var handler = SaveCommandEnabledChanged;
+            RaiseEvent(SaveCommandEnabledChanged);
+        }
+
+        private void RaiseEvent(EventHandler handler)
+        {
             if (handler != null)
                 handler(this, EventArgs.Empty);
         }

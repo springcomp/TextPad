@@ -9,17 +9,28 @@ namespace TextPad.Utils
 {
     public sealed class MessageBox
     {
-        public static async Task<Result> ShowAsync(string content, string caption, UICommand yesCommand, UICommand noCommand, UICommand cancelCommand = null)
+        public static async Task<Result> ShowAsync(
+              string content
+            , string caption
+            , UICommand yesCommand
+            , UICommand noCommand = null
+            , UICommand cancelCommand = null
+            )
         {
             var dialog = new MessageDialog(content);
             dialog.Options = MessageDialogOptions.None;
             dialog.Title = caption;
 
             dialog.Commands.Add(yesCommand);
-            dialog.Commands.Add(noCommand);
 
             dialog.DefaultCommandIndex = 0;
-            dialog.CancelCommandIndex = 1;
+            dialog.CancelCommandIndex = 0;
+
+            if (noCommand != null)
+            {
+                dialog.Commands.Add(noCommand);
+                dialog.CancelCommandIndex = 1;
+            }
 
             if (cancelCommand != null)
             {

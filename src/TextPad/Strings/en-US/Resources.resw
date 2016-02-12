@@ -159,7 +159,8 @@
 Do you want to save the current changes?</value>
   </data>
   <data name="MessageDialog_Error_NotATextFile_Content" xml:space="preserve">
-    <value>The document does not appear to be a valid text file.</value>
+    <value>The document does not appear to be a valid text file.
+Please, select another encoding and try again.</value>
   </data>
   <data name="MessageDialog_Error_NotATextFile_Title" xml:space="preserve">
     <value>Invalid text document</value>

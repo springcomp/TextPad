@@ -100,7 +100,16 @@ namespace TextPad.ViewModels
 
         public async Task OpenAsync(StorageFile path)
         {
-            SetTextContent(await ReadTextAsync(path), false);
+            var text = await ReadTextAsync(path);
+
+            if (!Encoding.DecodedSuccessfully())
+            {
+                await DialogBox.ErrorInvalidEncodingAsync();
+                Encoding.ResetDecoderFallback();
+                return;
+            }
+
+            SetTextContent(text, false);
 
             Path = path;
             Filename = path.Name;

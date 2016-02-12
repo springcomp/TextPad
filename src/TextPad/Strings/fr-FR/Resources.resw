@@ -159,7 +159,8 @@
 Voulez-vous sauvegarder les changements ?</value>
   </data>
   <data name="MessageDialog_Error_NotATextFile_Content" xml:space="preserve">
-    <value>Ce document ne semble pas être un fichier texte valide.</value>
+    <value>Ce document ne semble pas être un fichier texte valide.
+Essayer de nouveau après avoir sélectionné un jeu de caractères différent.</value>
   </data>
   <data name="MessageDialog_Error_NotATextFile_Title" xml:space="preserve">
     <value>Texte invalide</value>

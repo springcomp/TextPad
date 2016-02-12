@@ -6,6 +6,23 @@ namespace TextPad.Utils
 {
     public sealed class DialogBox
     {
+        public static async Task<MessageBox.Result> ErrorInvalidEncodingAsync()
+        {
+            var resources = new ResourceLoader();
+
+            var content = resources.GetString("/Resources/MessageDialog_Error_NotATextFile_Content");
+            var title = resources.GetString("/Resources/MessageDialog_Error_NotATextFile_Title");
+            var ok = resources.GetString("/Resources/MessageDialog_OK");
+
+            var result = await MessageBox.ShowAsync(
+                  content
+                , title
+                , new UICommand(ok, cmd => { })
+                );
+
+            return result;
+        }
+
         public static async Task<MessageBox.Result> ConfirmKeepAlternateEncodingAsync()
         {
             var resources = new ResourceLoader();

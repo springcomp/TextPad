@@ -7,6 +7,35 @@
         <Setter Property="FontSize" Value="11" />
     </Style>
 
+    <Style TargetType="Button" x:Name="HamburgerButtonStyle" x:Key="HamburgerButtonStyle">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Width" Value="68"/>
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+
+                        <StackPanel x:Name="ContentRoot" MinHeight="{ThemeResource AppBarThemeCompactHeight}">
+                            <FontIcon
+                                x:Name="Content"
+                                Height="20"
+                                Margin="0,14,0,4"
+                                Glyph="{TemplateBinding Tag}"
+                                Foreground="{TemplateBinding Foreground}"
+                                HorizontalAlignment="Stretch"
+                                AutomationProperties.AccessibilityView="Raw"/>
+                        </StackPanel>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="AppBarButton" x:Name="HamburgerAppButtonStyle" x:Key="HamburgerAppButtonStyle">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>

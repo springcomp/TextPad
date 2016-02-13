@@ -10,7 +10,7 @@
     >
 
     <Page.TopAppBar>
-        <CommandBar>
+        <CommandBar x:Name="TopCommandBar">
             <CommandBar.Content>
                 <AppBarButton
                 x:Name="HamburgerButton"
@@ -64,26 +64,49 @@
         </CommandBar>
     </Page.TopAppBar>
 
-    <SplitView x:Name="SplitView"
-               DisplayMode="Overlay"
-               IsPaneOpen="{Binding Path=IsPaneOpen, Mode=TwoWay}"
-               IsTabStop="False"
-               PaneBackground="{ThemeResource SplitViewPaneBackgroundBrush}"
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <RelativePanel
+            x:Name="Header"
+            Background="{StaticResource SplitViewPaneBackgroundBrush}"
+            Grid.Row="0"
+            Height="{ThemeResource AppBarThemeCompactHeight}"            
+            HorizontalAlignment="Stretch">
+            <Button
+                Style="{StaticResource HamburgerButtonStyle}"
+                RelativePanel.AlignLeftWithPanel="True"
+                Tag="&#xE700;"
+                Click="HamburgerButton_Click"
+                />
+        </RelativePanel>
+        
+        <SplitView x:Name="SplitView"
+                DisplayMode="Overlay"
+                Grid.Row="1"
+                Grid.RowSpan="1"
+                IsPaneOpen="{Binding Path=IsPaneOpen, Mode=TwoWay}"
+                IsTabStop="False"
+                PaneBackground="{ThemeResource SplitViewPaneBackgroundBrush}"
                >
-        <SplitView.Pane>
-            <RelativePanel
+            <SplitView.Pane>
+                <RelativePanel
                 MinHeight="80" Margin="12, 12, 12, 12"
                 >
-                <!-- Choose an encoding DropDown box -->
-                <StackPanel Orientation="Vertical" RelativePanel.AlignTopWithPanel="True">
-                    <TextBlock
+                    <!-- Choose an encoding DropDown box -->
+                    <StackPanel Orientation="Vertical" RelativePanel.AlignTopWithPanel="True">
+                        <TextBlock
                         x:Uid="/Resources/SplitViewPane_DefaultEncoding"
                         HorizontalAlignment="Left"
                         Padding="0, 0, 0, 4"
                         Style="{ThemeResource BodyTextBlockStyle}"
                         Text="Encoding:"
                         />
-                    <ComboBox
+                        <ComboBox
                         x:Name="DefaultCharset"
                         x:Uid="/Resources/SplitViewPane_DefaultCharset"
                         HorizontalAlignment="Left"
@@ -93,20 +116,20 @@
                         ToolTipService.Placement="Mouse"
                         SelectionChanged="DefaultCharset_SelectionChanged"
                         />
-                </StackPanel>
-                <!-- About information -->
-                <StackPanel Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True">
-                    <Line  HorizontalAlignment="Stretch" Stroke="{ThemeResource SystemControlBackgroundBaseLowBrush}" StrokeThickness="2"
+                    </StackPanel>
+                    <!-- About information -->
+                    <StackPanel Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True">
+                        <Line  HorizontalAlignment="Stretch" Stroke="{ThemeResource SystemControlBackgroundBaseLowBrush}" StrokeThickness="2"
                            X2="{Binding Path=OpenPaneLength, ElementName=SplitView}"
                            Margin="0, 0, 0, 8"
                            />
 
-                    <TextBlock
+                        <TextBlock
                         Style="{StaticResource FootprintTextBlockStyle}">
                         <Run Text="Basic Text Editor - Version " />
                         <Run Text="{Binding Path=CurrentVersion, Mode=OneTime}" />
-                    </TextBlock>
-                    <TextBlock
+                        </TextBlock>
+                        <TextBlock
                         Style="{StaticResource FootprintTextBlockStyle}"
                         TextWrapping="WrapWholeWords">
                         <Run x:Uid="/Resources/About_Review_PleaseReviewApp" Text="Please, review this App" />
@@ -115,22 +138,125 @@
                             <Run x:Uid="/Resources/About_Review_InWindowsStore" Text="in the Windows® Store" />
                         </Hyperlink>
                         <Run Text="." />
-                    </TextBlock>
-                </StackPanel>
-            </RelativePanel>
-        </SplitView.Pane>
-        <SplitView.Content>
-            <Frame x:Name="CurrentFrame">
-                <Frame.ContentTransitions>
-                    <TransitionCollection>
-                        <NavigationThemeTransition>
-                            <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                                <EntranceNavigationTransitionInfo/>
-                            </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                        </NavigationThemeTransition>
-                    </TransitionCollection>
-                </Frame.ContentTransitions>
-            </Frame>
-        </SplitView.Content>
-    </SplitView>
+                        </TextBlock>
+                    </StackPanel>
+                </RelativePanel>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Frame x:Name="CurrentFrame">
+                    <Frame.ContentTransitions>
+                        <TransitionCollection>
+                            <NavigationThemeTransition>
+                                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                                    <EntranceNavigationTransitionInfo/>
+                                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                            </NavigationThemeTransition>
+                        </TransitionCollection>
+                    </Frame.ContentTransitions>
+                </Frame>
+            </SplitView.Content>
+        </SplitView>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="WidthStates">
+                <VisualStateGroup.States>
+                    <VisualState x:Name="SizeStates">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="360" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Target="BottomCommandBar.Visibility" Value="Collapsed" />
+                            <Setter Target="Header.Visibility" Value="Collapsed" />
+                            <Setter Target="SplitView.(Grid.Row)" Value="0" />
+                            <Setter Target="SplitView.(Grid.RowSpan)" Value="2" />
+                            <Setter Target="TopCommandBar.Visibility" Value="Visible" />
+                        </VisualState.Setters>
+                    </VisualState>
+
+                    <VisualState x:Name="NarrowState">
+                        <VisualState.StateTriggers>
+                            <AdaptiveTrigger MinWindowWidth="0" />
+                        </VisualState.StateTriggers>
+                        <VisualState.Setters>
+                            <Setter Target="BottomCommandBar.Visibility" Value="Visible" />
+                            <Setter Target="Header.Visibility" Value="Visible" />
+                            <Setter Target="SplitView.(Grid.Row)" Value="1" />
+                            <Setter Target="SplitView.(Grid.RowSpan)" Value="1" />
+                            <Setter Target="TopCommandBar.Visibility" Value="Collapsed" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup.States>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
+    </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar x:Name="BottomCommandBar">
+
+            <CommandBar.PrimaryCommands>
+                <AppBarButton
+                    x:Name="BottomNewCommand"
+                    x:Uid="/Resources/AppBar_NewCommand"
+                          
+                    Icon="NewFolder"
+                    IsEnabled="True"
+                    Label="New"
+                
+                    ToolTipService.ToolTip="Create a new document"
+                    ToolTipService.Placement="Mouse"
+                
+                    Click="NewCommand_Click"
+                
+                    />
+                <AppBarButton
+                    x:Name="BottomOpenCommand"
+                    x:Uid="/Resources/AppBar_OpenCommand"
+                          
+                    Icon="OpenFile"
+                    IsEnabled="True"
+                    Label="Open"
+                
+                    ToolTipService.ToolTip="Open existing document"
+                    ToolTipService.Placement="Mouse"
+                
+                    Click="OpenCommand_Click"
+                
+                    />
+                <AppBarButton
+                    x:Name="BottomSaveCommand"
+                    x:Uid="/Resources/AppBar_SaveCommand"
+                          
+                    Icon="Save"
+                    IsEnabled="{Binding Path=SaveCommandEnabled, Mode=OneWay}"
+                    Label="Save"
+                
+                    ToolTipService.ToolTip="Save text document"
+                    ToolTipService.Placement="Mouse"
+                
+                    Click="SaveCommand_Click"
+                
+                    />
+            </CommandBar.PrimaryCommands>
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton
+                    x:Name="BottomOptionsCommand"
+                    x:Uid="/Resources/AppBar_MoreCommand"
+                    
+                    Icon="Edit"
+                    IsEnabled="True"
+                    Label="Options"
+                
+                    ToolTipService.ToolTip="More options"
+                    ToolTipService.Placement="Mouse"
+
+                    Click="HamburgerButton_Click"
+                
+                    />
+            </CommandBar.SecondaryCommands>
+
+        </CommandBar>
+    </Page.BottomAppBar>
+
 </Page>

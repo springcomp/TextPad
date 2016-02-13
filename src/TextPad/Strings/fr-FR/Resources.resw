@@ -202,4 +202,10 @@ Voulez-vous conserver l'utilisation de ce jeu de caractères ?</value>
   <data name="Encoding_CentralEasternEurope_1250" xml:space="preserve">
     <value>Europe du centre et de l'est</value>
   </data>
+  <data name="AppBar_MoreCommand.Label" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="AppBar_MoreCommand.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Afficher plus d'options</value>
+  </data>
 </root>

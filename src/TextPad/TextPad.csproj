@@ -115,6 +115,7 @@
     <Compile Include="Services\ServiceRepository.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\ToolbarStateService.cs" />
+    <Compile Include="Triggers\UserInteractionModeTrigger.cs" />
     <Compile Include="Utils\DialogBox.cs" />
     <Compile Include="Utils\MessageBox.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />

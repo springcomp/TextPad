@@ -1,3 +1,7 @@
+Version 1.2.8.0
+
+ * Fixed adaptive UI: now depending upon UserInteractionMode (Touch or Mouse) instead of minimum Window width.
+
 Version 1.2.7.0
 
  * Added an error when trying to open a potentially invalid text file.

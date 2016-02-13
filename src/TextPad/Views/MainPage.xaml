@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TextPad.Views"
+    xmlns:trigg="using:TextPad.Triggers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -158,11 +159,11 @@
         </SplitView>
 
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="WidthStates">
+            <VisualStateGroup x:Name="UserInteractionModeStates">
                 <VisualStateGroup.States>
-                    <VisualState x:Name="SizeStates">
+                    <VisualState x:Name="MouseState">
                         <VisualState.StateTriggers>
-                            <AdaptiveTrigger MinWindowWidth="360" />
+                            <trigg:UserInteractionModeTrigger CurrentUserInteractionMode="Mouse" />
                         </VisualState.StateTriggers>
                         <VisualState.Setters>
                             <Setter Target="BottomCommandBar.Visibility" Value="Collapsed" />
@@ -175,7 +176,7 @@
 
                     <VisualState x:Name="NarrowState">
                         <VisualState.StateTriggers>
-                            <AdaptiveTrigger MinWindowWidth="0" />
+                            <trigg:UserInteractionModeTrigger CurrentUserInteractionMode="Touch" />
                         </VisualState.StateTriggers>
                         <VisualState.Setters>
                             <Setter Target="BottomCommandBar.Visibility" Value="Visible" />

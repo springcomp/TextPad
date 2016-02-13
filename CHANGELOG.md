@@ -1,4 +1,4 @@
-Version 1.1.7.0
+Version 1.2.7.0
 
  * Added an error when trying to open a potentially invalid text file.
  * Added support for Central and Eastern European (1250) encoding.

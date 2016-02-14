@@ -26,16 +26,26 @@ namespace TextPad.Utils
             dialog.DefaultCommandIndex = 0;
             dialog.CancelCommandIndex = 0;
 
+            if (noCommand != null && cancelCommand != null)
+            {
+                // Windows Phone Devices only support two commands
+                // so we use "Cancel" instead of "No" in that case
+
+                var deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
+                if (deviceFamily == "Windows.Mobile")
+                    noCommand = null;
+            }
+
             if (noCommand != null)
             {
                 dialog.Commands.Add(noCommand);
-                dialog.CancelCommandIndex = 1;
+                dialog.CancelCommandIndex = (uint)dialog.Commands.Count - 1;
             }
 
             if (cancelCommand != null)
             {
                 dialog.Commands.Add(cancelCommand);
-                dialog.CancelCommandIndex = 2;
+                dialog.CancelCommandIndex = (uint)dialog.Commands.Count - 1;
             }
 
             var command = await dialog.ShowAsync();

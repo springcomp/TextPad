@@ -1,3 +1,7 @@
+Version 1.2.9.0
+
+  * Fixed a crash on Mobile when trying to display an alert for pending changes.
+
 Version 1.2.8.0
 
  * Fixed adaptive UI: now depending upon UserInteractionMode (Touch or Mouse) instead of minimum Window width.

@@ -22,6 +22,7 @@ using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -46,6 +47,8 @@ namespace TextPad.Views
         {
             this.InitializeComponent();
             this.DataContext = application_;
+
+            Window.Current.Activated += Window_Activated;
 
             SetDocument();
         }
@@ -142,6 +145,39 @@ namespace TextPad.Views
         #endregion
 
         #region Event Handlers
+
+        private void Window_Activated(object sender, WindowActivatedEventArgs e)
+        {
+            // there is currently a bug that prevents the VisualStateManager to
+            // detect the initial state when the application is restored in
+            // "Desktop" mode.
+
+            // So we register to this event once, and make the changes ourselves.
+
+            var mode = UIViewSettings.GetForCurrentView().UserInteractionMode;
+            if (mode == UserInteractionMode.Mouse)
+            {
+                BottomCommandBar.Visibility = Visibility.Collapsed;
+                Header.Visibility = Visibility.Collapsed;
+                TopCommandBar.Visibility = Visibility.Visible;
+
+                Grid.SetRow(SplitView, 0);
+                Grid.SetRowSpan(SplitView, 2);
+            }
+            else
+            {
+                BottomCommandBar.Visibility = Visibility.Visible;
+                Header.Visibility = Visibility.Visible;
+                TopCommandBar.Visibility = Visibility.Visible;
+
+                Grid.SetRow(SplitView, 1);
+                Grid.SetRowSpan(SplitView, 1);
+            }
+
+            // we do not want to be notified next time
+
+            Window.Current.Activated -= Window_Activated;
+        }
 
         private async void Page_KeyDown(object sender, KeyRoutedEventArgs e)
         {

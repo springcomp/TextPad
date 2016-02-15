@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.UI.Popups;
 
 namespace TextPad.Utils
@@ -26,16 +25,6 @@ namespace TextPad.Utils
             dialog.DefaultCommandIndex = 0;
             dialog.CancelCommandIndex = 0;
 
-            if (noCommand != null && cancelCommand != null)
-            {
-                // Windows Phone Devices only support two commands
-                // so we use "Cancel" instead of "No" in that case
-
-                var deviceFamily = Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily;
-                if (deviceFamily == "Windows.Mobile")
-                    noCommand = null;
-            }
-
             if (noCommand != null)
             {
                 dialog.Commands.Add(noCommand);
@@ -44,11 +33,35 @@ namespace TextPad.Utils
 
             if (cancelCommand != null)
             {
-                dialog.Commands.Add(cancelCommand);
-                dialog.CancelCommandIndex = (uint)dialog.Commands.Count - 1;
+                // Devices with a hardware back button
+                // use the hardware button for Cancel.
+                // for other devices, show a third option
+
+                if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+                {
+                    // disable the default Cancel command index
+                    // so that dialog.ShowAsync() returns null
+                    // in that case
+
+                    dialog.CancelCommandIndex = UInt32.MaxValue;
+                }
+                else
+                {
+                    dialog.Commands.Add(cancelCommand);
+                    dialog.CancelCommandIndex = (uint)dialog.Commands.Count - 1;
+                }
             }
 
             var command = await dialog.ShowAsync();
+
+            if (command == null && cancelCommand != null)
+            {
+                // back button was pressed
+                // invoke the UICommand
+
+                cancelCommand.Invoked(cancelCommand);
+                return Result.Cancel;
+            }
 
             if (command == yesCommand)
                 return Result.Yes;

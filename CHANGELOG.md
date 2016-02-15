@@ -1,3 +1,7 @@
+Version 1.2.10.0
+
+  * Use Yes/No as valid options for a three-command MessageDialog and handle Cancel with the hardware back button.
+
 Version 1.2.9.0
 
   * Fixed a crash on Mobile when trying to display an alert for pending changes.

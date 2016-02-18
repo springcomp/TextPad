@@ -48,6 +48,7 @@ namespace TextPad.Views
             document_ = e.Parameter as DocumentViewModel;
             System.Diagnostics.Debug.Assert(document_ != null);
 
+            document_.IsModified = false;
             DataContext = document_;
         }
 

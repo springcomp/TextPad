@@ -65,34 +65,32 @@
         </CommandBar>
     </Page.TopAppBar>
 
-    <Grid>
+    <RelativePanel>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="48"/>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <RelativePanel
+        <StackPanel
             x:Name="Header"
             Background="{StaticResource SplitViewPaneBackgroundBrush}"
-            Grid.Row="0"
             Height="{ThemeResource AppBarThemeCompactHeight}"            
-            HorizontalAlignment="Stretch">
+            HorizontalAlignment="Stretch"
+            Orientation="Horizontal"
+            RelativePanel.AlignTopWithPanel="True"
+            >
             <Button
                 Style="{StaticResource HamburgerButtonStyle}"
-                RelativePanel.AlignLeftWithPanel="True"
                 Tag="&#xE700;"
                 Click="HamburgerButton_Click"
                 />
-        </RelativePanel>
-        
+        </StackPanel>
+              
         <SplitView x:Name="SplitView"
                 DisplayMode="Overlay"
-                Grid.Row="1"
-                Grid.RowSpan="1"
                 IsPaneOpen="{Binding Path=IsPaneOpen, Mode=TwoWay}"
                 IsTabStop="False"
                 PaneBackground="{ThemeResource SplitViewPaneBackgroundBrush}"
+                RelativePanel.Below="Header"
+                RelativePanel.AlignBottomWithPanel="True"
+                RelativePanel.AlignLeftWithPanel="True"
+                RelativePanel.AlignRightWithPanel="True"
                >
             <SplitView.Pane>
                 <RelativePanel
@@ -168,8 +166,6 @@
                         <VisualState.Setters>
                             <Setter Target="BottomCommandBar.Visibility" Value="Collapsed" />
                             <Setter Target="Header.Visibility" Value="Collapsed" />
-                            <Setter Target="SplitView.(Grid.Row)" Value="0" />
-                            <Setter Target="SplitView.(Grid.RowSpan)" Value="2" />
                             <Setter Target="TopCommandBar.Visibility" Value="Visible" />
                         </VisualState.Setters>
                     </VisualState>
@@ -181,8 +177,6 @@
                         <VisualState.Setters>
                             <Setter Target="BottomCommandBar.Visibility" Value="Visible" />
                             <Setter Target="Header.Visibility" Value="Visible" />
-                            <Setter Target="SplitView.(Grid.Row)" Value="1" />
-                            <Setter Target="SplitView.(Grid.RowSpan)" Value="1" />
                             <Setter Target="TopCommandBar.Visibility" Value="Collapsed" />
                         </VisualState.Setters>
                     </VisualState>
@@ -190,7 +184,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         
-    </Grid>
+    </RelativePanel>
 
     <Page.BottomAppBar>
         <CommandBar x:Name="BottomCommandBar">
